@@ -44,6 +44,8 @@ def _main():
 
     output_file = ''
 
+    fps = FPS()
+
     if args.image:
         if not os.path.isfile(args.image):
             sys.exit(1)
@@ -65,6 +67,7 @@ def _main():
                                        cap.get(cv2.CAP_PROP_FPS), (
                                            round(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
                                            round(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+    fps.start()
     T = Tracking()
     while True:
 
@@ -93,11 +96,13 @@ def _main():
             cv2.imwrite(os.path.join(args.output_dir, output_file), frame.astype(np.uint8))
         else:
             video_writer.write(frame.astype(np.uint8))
+        fps.update()
         cv2.imshow(wind_name, frame)
 
         key = cv2.waitKey(1)
         if key == 27 or key == ord('q'):
             break
+    fps.stop()
     cap.release()
     cv2.destroyAllWindows()
     print(f"\nFPS: {fps.fps()}")
