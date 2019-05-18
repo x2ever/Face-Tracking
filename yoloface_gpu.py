@@ -12,7 +12,7 @@ def get_args():
                         help='path to anchor definitions')
     parser.add_argument('--classes', type=str, default='cfg/face_classes.txt',
                         help='path to class definitions')
-    parser.add_argument('--score', type=float, default=0.5,
+    parser.add_argument('--score', type=float, default=0.6,
                         help='the score threshold')
     parser.add_argument('--iou', type=float, default=0.45,
                         help='the iou threshold')
