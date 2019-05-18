@@ -16,10 +16,12 @@ class Tracking:
             return []
 
         if len(previous_boxes) == 0:
+            self.numbers = np.zeros(len(boxes))
             self.boxes = boxes
-            for box in boxes:
+            for i, box in enumerate(boxes):
                 self.face_num += 1
-                self.numbers.append(self.face_num)
+                
+                self.numbers[i] = self.face_num
 
             return self.numbers
 
