@@ -50,9 +50,10 @@ def draw_predict(frame, boxes, confidences, orders):
     for i in range(len(boxes)):
         left, top, right, bottom = refined_box(*boxes[i])
 
-        cv2.rectangle(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[orders[i]], 2)
+        print(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[int(orders[i])], 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[int(orders[i])], 2)
         
-        text1 = f'FACE NUM: {orders[i]}'
+        text1 = f'NUM: {int(orders[i])}'
         text2 = '%.2f'  % confidences[i]
 
         # Display the label at the top of the bounding box
@@ -60,10 +61,35 @@ def draw_predict(frame, boxes, confidences, orders):
         label_size, base_line = cv2.getTextSize(text2, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
         top = max(top, label_size[1])
-        cv2.putText(frame, text1, (left, top - 16), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
-                    RANDOM_COLOR_LIST[orders[i]], 1)
-        cv2.putText(frame, text2, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
-                    RANDOM_COLOR_LIST[orders[i]], 1)
+        cv2.putText(frame, text1, (left, top - 12), cv2.FONT_HERSHEY_SIMPLEX, 0.2,
+                    RANDOM_COLOR_LIST[int(orders[i])], 1)
+        cv2.putText(frame, text2, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.3,
+                    RANDOM_COLOR_LIST[int(orders[i])], 1)
+    
+    return frame
+
+def draw_predict_gpu(frame, boxes, confidences, orders):
+    # Draw a bounding box.
+    for i in range(len(boxes)):
+        left, top, right, bottom = boxes[i]
+        top, left, bottom, right = boxes[i]
+
+        cv2.rectangle(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[int(orders[i])], 2)
+        
+        text1 = f'NUM: {int(orders[i])}'
+        text2 = '%.2f'  % confidences[i]
+
+        # Display the label at the top of the bounding box
+        label_size, base_line = cv2.getTextSize(text1, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+        label_size, base_line = cv2.getTextSize(text2, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+
+        top = max(top, label_size[1])
+        cv2.putText(frame, text1, (left, top - 12), cv2.FONT_HERSHEY_SIMPLEX, 0.2,
+                    RANDOM_COLOR_LIST[int(orders[i])], 1)
+        cv2.putText(frame, text2, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.3,
+                    RANDOM_COLOR_LIST[int(orders[i])], 1)
+    
+    return frame
 
 
 def post_process(frame, outs, conf_threshold, nms_threshold, tracking):
