@@ -87,7 +87,7 @@ def _main():
 
         # Runs the forward pass to get output of the output layers
         outs = net.forward(get_outputs_names(net))
-
+    
         # Remove the bounding boxes with low confidence
         faces = post_process(frame, outs, CONF_THRESHOLD, NMS_THRESHOLD, T)
 
