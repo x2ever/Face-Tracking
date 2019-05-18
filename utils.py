@@ -11,27 +11,23 @@
 # This file contains the code of the parameters and help functions
 #
 # *******************************************************************
-
-
 import datetime
 import numpy as np
 import cv2
+from Box import Box
+import numpy as np
 
 # -------------------------------------------------------------------
 # Parameters
 # -------------------------------------------------------------------
 
 CONF_THRESHOLD = 0.5
-NMS_THRESHOLD = 0.4
+NMS_THRESHOLD = 0.5
 IMG_WIDTH = 416
 IMG_HEIGHT = 416
 
 # Default colors
-COLOR_BLUE = (255, 0, 0)
-COLOR_GREEN = (0, 255, 0)
-COLOR_RED = (0, 0, 255)
-COLOR_WHITE = (255, 255, 255)
-COLOR_YELLOW = (0, 255, 255)
+RANDOM_COLOR_LIST = [(np.random.randint(256), np.random.randint(256), np.random.randint(256)) for i in range(3000)]
 
 
 # -------------------------------------------------------------------
@@ -49,21 +45,28 @@ def get_outputs_names(net):
 
 
 # Draw the predicted bounding box
-def draw_predict(frame, conf, left, top, right, bottom):
+def draw_predict(frame, boxes, confidences, orders):
     # Draw a bounding box.
-    cv2.rectangle(frame, (left, top), (right, bottom), COLOR_YELLOW, 2)
+    for i in range(len(boxes)):
+        left, top, right, bottom = refined_box(*boxes[i])
 
-    text = '{:.2f}'.format(conf)
+        cv2.rectangle(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[orders[i]], 2)
+        
+        text1 = f'FACE NUM: {orders[i]}'
+        text2 = '%.2f'  % confidences[i]
 
-    # Display the label at the top of the bounding box
-    label_size, base_line = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+        # Display the label at the top of the bounding box
+        label_size, base_line = cv2.getTextSize(text1, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+        label_size, base_line = cv2.getTextSize(text2, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
-    top = max(top, label_size[1])
-    cv2.putText(frame, text, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
-                COLOR_WHITE, 1)
+        top = max(top, label_size[1])
+        cv2.putText(frame, text1, (left, top - 16), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
+                    RANDOM_COLOR_LIST[orders[i]], 1)
+        cv2.putText(frame, text2, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
+                    RANDOM_COLOR_LIST[orders[i]], 1)
 
 
-def post_process(frame, outs, conf_threshold, nms_threshold):
+def post_process(frame, outs, conf_threshold, nms_threshold, tracking):
     frame_height = frame.shape[0]
     frame_width = frame.shape[1]
 
@@ -102,9 +105,11 @@ def post_process(frame, outs, conf_threshold, nms_threshold):
         height = box[3]
         final_boxes.append(box)
         left, top, right, bottom = refined_box(left, top, width, height)
-        # draw_predict(frame, confidences[i], left, top, left + width,
-        #              top + height)
-        draw_predict(frame, confidences[i], left, top, right, bottom)
+        
+    orders = tracking.update([Box(*refined_box(*box)) for box in final_boxes])
+
+    draw_predict(frame, final_boxes, confidences, orders)
+    
     return final_boxes
 
 
@@ -119,7 +124,7 @@ class FPS:
     def start(self):
         self._start = datetime.datetime.now()
         return self
-
+  
     def stop(self):
         self._end = datetime.datetime.now()
 
