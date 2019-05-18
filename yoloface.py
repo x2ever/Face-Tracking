@@ -2,6 +2,8 @@ import argparse
 import sys
 import os
 
+from Tracking import Tracking
+
 from utils import *
 
 parser = argparse.ArgumentParser()
@@ -63,6 +65,7 @@ def _main():
                                        cap.get(cv2.CAP_PROP_FPS), (
                                            round(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
                                            round(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+    T = Tracking()
     while True:
 
         has_frame, frame = cap.read()
@@ -83,13 +86,13 @@ def _main():
         outs = net.forward(get_outputs_names(net))
 
         # Remove the bounding boxes with low confidence
+        faces = post_process(frame, outs, CONF_THRESHOLD, NMS_THRESHOLD, T)
 
         # Save the output video to file
         if args.image:
             cv2.imwrite(os.path.join(args.output_dir, output_file), frame.astype(np.uint8))
         else:
             video_writer.write(frame.astype(np.uint8))
-
         cv2.imshow(wind_name, frame)
 
         key = cv2.waitKey(1)
