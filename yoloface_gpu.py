@@ -29,16 +29,11 @@ def get_args():
 
 
 def _main():
-    # Get the arguments
     args = get_args()
 
     if args.image:
-        # Image detection mode
-        print('[i] ==> Image detection mode\n')
         detect_img(YOLO(args))
     else:
-        print('[i] ==> Video detection mode\n')
-        # Call the detect_video method here
         detect_video(YOLO(args), args.video, args.output)
 
     print('Well done!!!')
