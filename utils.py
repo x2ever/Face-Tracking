@@ -49,8 +49,6 @@ def draw_predict(frame, boxes, confidences, orders):
     # Draw a bounding box.
     for i in range(len(boxes)):
         left, top, right, bottom = refined_box(*boxes[i])
-
-        print(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[int(orders[i])], 2)
         cv2.rectangle(frame, (left, top), (right, bottom), RANDOM_COLOR_LIST[int(orders[i])], 2)
         
         text1 = f'NUM: {int(orders[i])}'
