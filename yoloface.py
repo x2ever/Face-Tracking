@@ -69,6 +69,13 @@ def _main():
                                            round(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
     fps.start()
     T = Tracking()
+    video_size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                  int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
+    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    vout = cv2.VideoWriter()
+    success = vout.open('output.mp4',fourcc,video_fps,video_size,True)
+
     while True:
 
         has_frame, frame = cap.read()
@@ -98,12 +105,14 @@ def _main():
             video_writer.write(frame.astype(np.uint8))
         fps.update()
         cv2.imshow(wind_name, frame)
+        vout.write(frame)
 
         key = cv2.waitKey(1)
         if key == 27 or key == ord('q'):
             break
     fps.stop()
     cap.release()
+    vout.release()
     cv2.destroyAllWindows()
     print(f"\nFPS: {fps.fps()}")
 
