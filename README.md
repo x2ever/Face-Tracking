@@ -1,90 +1,59 @@
-# YOLOFace
+# YOLO FACE + ID TRACKING
 
-# Deep learning based Face detection using the YOLOv3 algorithm
+## Forked Project
 
+This Project is a fork of [*yoloface*](https://github.com/sthanhng/yoloface).
 
-## Getting started
+## Pre-requisites
 
-The YOLOv3 (You Only Look Once) is a state-of-the-art, real-time object detection algorithm. The published model recognizes 80 different objects in images and videos. For more details, you can refer to this [paper](https://pjreddie.com/media/files/papers/YOLOv3.pdf).
+* python 3.7
+* tensorflow, opencv, numpy
 
-## YOLOv3's architecture
-
-![Imgur](assets/yolo-architecture.png)
-
-Credit: [Ayoosh Kathuria](https://towardsdatascience.com/yolo-v3-object-detection-53fb7d3bfe6b)
-
-## OpenCV Deep Neural Networks (dnn module)
-
-OpenCV `dnn` module supports running inference on pre-trained deep learning models from popular frameworks such as TensorFlow, Torch, Darknet and Caffe.
-
-## Prerequisites
-
-* Tensorflow
-* opencv-python
-* opencv-contrib-python
-* Numpy
-* Keras
-* Matplotlib
-* Pillow
-
-Development for this project will be isolated in Python virtual environment. This allows us to experiment with different versions of dependencies.
-
-There are many ways to install `virtual environment (virtualenv)`, see the [Python Virtual Environments: A Primer](https://realpython.com/python-virtual-environments-a-primer/) guide for different platforms, but here are a couple:
-
-- For Ubuntu
-```bash
-$ pip install virtualenv
+```
+python -m pip install tensorflow opencv-python opencv-contrib-python numpy
+git clone https://github.com/x2ever/face-tracking
+cd face-tracking
 ```
 
-- For Mac
-```bash
-$ pip install --upgrade virtualenv
-```
+## DownLoad Model Weight File
 
-Create a Python 3.6 virtual environment for this project and activate the virtualenv:
-```bash
-$ virtualenv -p python3.6 yoloface
-$ source ./yoloface/bin/activate
-```
+**Before starting, You shoud place these files into a directory `./model-weight/`**
 
-Next, install the dependencies for the this project:
-```bash
-$ pip install -r requirements.txt
-```
 
-## Usage
+#### CPU Model
+    
+DownLoad `yolov3-wider_16000.weights` file from [Google Drive Link](https://drive.google.com/file/d/1xYasjU52whXMLT5MtF7RCPQkV66993oR/view?usp=sharing)
 
-* Clone this repository
-```bash
-$ git clone https://github.com/sthanhng/yoloface
-```
+#### GPU Model
 
-* For face detection, you should download the pre-trained YOLOv3 weights file which trained on the [WIDER FACE: A Face Detection Benchmark](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/index.html) dataset from this [link](https://drive.google.com/file/d/1xYasjU52whXMLT5MtF7RCPQkV66993oR/view?usp=sharing) and place it in the `model-weights/` directory.
+DownLoad `YOLO_Face.h5` file from [Google Drive Link](https://docs.google.com/uc?export=download&id=1a_pbXPYNj7_Gi6OxUqNo_T23Dt_9CzOV)
 
-* Run the following command:
 
->**image input**
-```bash
-$ python yoloface.py --image samples/outside_000001.jpg --output-dir outputs/
-```
 
->**video input**
-```bash
-$ python yoloface.py --video samples/subway.mp4 --output-dir outputs/
-```
+## Run Model
 
->**webcam**
-```bash
-$ python yoloface.py --src 1 --output-dir outputs/
-```
+#### CPU
 
-## Sample outputs
+> webcam
 
-![Imgur](assets/outside_000001_yoloface.jpg)
+    python yoloface.py --src YOUR_WEBCAM_NUMBER(Mostly 0)
+
+> video
+
+    python yoloface.py --video PATH_TO_VIDEO_FILE 
+
+#### GPU
+
+> webcam
+
+    python yoloface_gpu.py --src YOUR_WEBCAM_NUMBER(Mostly 0)
+
+> video
+
+    python yoloface_gpu.py --video PATH_TO_VIDEO_FILE 
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more details.
 
-## References
 
