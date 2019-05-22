@@ -11,8 +11,8 @@ This Project is a fork of [*yoloface*](https://github.com/sthanhng/yoloface).
 
 ```
 python -m pip install tensorflow opencv-python opencv-contrib-python numpy
-git clone https://github.com/x2ever/face-tracking
-cd face-tracking
+git clone https://github.com/x2ever/Face-Tracking
+cd Face-Tracking
 ```
 
 ## DownLoad Model Weight File
